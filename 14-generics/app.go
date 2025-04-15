@@ -1,16 +1,6 @@
 package main
 
-import "fmt"
-
 func main() {
-	fmt.Println(add(1, 2))
-	fmt.Println(add(1.5, 2.5))
-	fmt.Println(add("Hello", " World"))
-	fmt.Println(add(1, "Hello"))
-
-	fmt.Println(addWithGenerics(1, 2))
-
-	fmt.Println(convert[float64, int](5.54))
 
 }
 
