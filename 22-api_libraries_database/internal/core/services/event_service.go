@@ -22,3 +22,7 @@ func (s *eventService) CreateEvent(event *domain.Event) (*domain.Event, error) {
 func (s *eventService) GetEvents() ([]domain.Event, error) {
 	return s.eventRepo.GetAll()
 }
+
+func (s *eventService) GetEvent(id int64) (domain.Event, error) {
+	return s.eventRepo.GetById(id)
+}

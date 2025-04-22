@@ -47,13 +47,34 @@ func (r *sqliteEventRepository) GetAll() ([]domain.Event, error) {
 	var events []domain.Event
 	for rows.Next() {
 		var event domain.Event
-		if err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID); err != nil {
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+
+		if err != nil {
 			return nil, err
 		}
+
 		events = append(events, event)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 	return events, nil
+}
+
+func (r *sqliteEventRepository) GetById(id int64) (domain.Event, error) {
+	query := `SELECT id, name, description, location, date_time, user_id FROM events WHERE id = ?`
+	row := r.db.QueryRow(query, id)
+
+	var event domain.Event
+	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return event, nil
+		}
+
+		return event, err
+	}
+
+	return event, nil
 }
