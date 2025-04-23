@@ -20,4 +20,5 @@ func EventRoutes(server *gin.Engine, db *sql.DB) {
 	server.POST(mainPath, eventHandler.CreateEvent)
 	server.GET(mainPath, eventHandler.GetEvents)
 	server.GET(mainPath+"/:id", eventHandler.GetEvent)
+	server.PUT(mainPath+"/:id", eventHandler.UpdateEvent)
 }

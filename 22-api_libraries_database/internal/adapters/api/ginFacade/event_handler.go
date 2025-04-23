@@ -71,3 +71,33 @@ func (h *EventHandler) CreateEvent(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, createdEvent)
 }
+
+func (h *EventHandler) UpdateEvent(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid event ID"})
+		return
+	}
+
+	_, err = h.eventService.GetEvent(id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch event"})
+		return
+	}
+
+	var updatedEvent domain.Event
+	err = c.ShouldBindJSON(&updatedEvent)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Could not parse requested data"})
+		return
+	}
+	updatedEvent.ID = id
+
+	updatedEvent, err = h.eventService.UpdateEvent(&updatedEvent)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update event"})
+		return
+	}
+	c.JSON(http.StatusOK, updatedEvent)
+}

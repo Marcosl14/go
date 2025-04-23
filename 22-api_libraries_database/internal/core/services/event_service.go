@@ -26,3 +26,7 @@ func (s *eventService) GetEvents() ([]domain.Event, error) {
 func (s *eventService) GetEvent(id int64) (domain.Event, error) {
 	return s.eventRepo.GetById(id)
 }
+
+func (s *eventService) UpdateEvent(event *domain.Event) (domain.Event, error) {
+	return s.eventRepo.Update(event)
+}

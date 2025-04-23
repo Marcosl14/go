@@ -2,6 +2,7 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
 
 	"example.com/api/internal/core/domain"
 )
@@ -77,4 +78,22 @@ func (r *sqliteEventRepository) GetById(id int64) (domain.Event, error) {
 	}
 
 	return event, nil
+}
+
+func (r *sqliteEventRepository) Update(event *domain.Event) (domain.Event, error) {
+	fmt.Println("Updating event:", event)
+
+	query := `UPDATE events SET name = ?, description = ?, location = ?, date_time = ?, user_id = ? WHERE id = ?`
+	stmt, err := r.db.Prepare(query)
+	if err != nil {
+		return domain.Event{}, err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.UserID, event.ID)
+	if err != nil {
+		return domain.Event{}, err
+	}
+
+	return *event, nil
 }
